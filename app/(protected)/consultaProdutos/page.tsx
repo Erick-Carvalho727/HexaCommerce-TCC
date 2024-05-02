@@ -1,28 +1,13 @@
 'use client'
 
+import { deleteProduct } from '@/actions/deleteProduct'
 import { getProducts } from '@/actions/selectProduct'
-import { RefreshContext } from '@/app/context/product'
-import { columns } from '@/components/consultaProdutos/columns'
+import { createColumns } from '@/components/consultaProdutos/columns'
 import { DataTable } from '@/components/consultaProdutos/data-table'
 import HeaderConsultaProdutos from '@/components/consultaProdutos/header-consulta-produtos'
-import { useContext, useEffect, useState, useTransition } from 'react'
+import { ProductSchemaSelector } from '@/schemas'
+import { useEffect, useState, useTransition } from 'react'
 import { z } from 'zod'
-
-export const ProductSchemaSelector = z.object({
-  id: z.number(),
-  codigo: z.string(),
-  fabricante: z.string().nullable(),
-  peso: z.string().nullable(),
-  altura: z.string().nullable(),
-  largura: z.string().nullable(),
-  comprimento: z.string().nullable(),
-  nomeProduto: z.string().nullable(),
-  ean: z.string().nullable(),
-  custo: z.number(),
-  estoque: z.number(),
-  createdAt: z.date(),
-  precoVenda: z.number(),
-})
 
 interface ProductResponse {
   products?: z.infer<typeof ProductSchemaSelector>[]
@@ -37,7 +22,6 @@ export default function ConsultaProdutosPage() {
   const [products, setProducts] = useState<
     z.infer<typeof ProductSchemaSelector>[]
   >([])
-  const { refreshProducts, setRefreshProducts } = useContext(RefreshContext)
 
   const listProducts = () => {
     startTransition(() => {
@@ -54,8 +38,23 @@ export default function ConsultaProdutosPage() {
 
   useEffect(() => {
     listProducts()
-    setRefreshProducts(false)
-  }, [refreshProducts, setRefreshProducts])
+  }, [])
+
+  const handleDeleteProduct = (productId: number[], productIdUnico: number) => {
+    if (productId.length === 0) {
+      productId.push(productIdUnico)
+    }
+
+    startTransition(() => {
+      deleteProduct(productId).then((data) => {
+        if (data.error) {
+          console.error('Failed to delete product:', data.error)
+        } else {
+          console.log('Product deleted successfully', data.products)
+        }
+      })
+    })
+  }
 
   return (
     <div>
@@ -63,7 +62,7 @@ export default function ConsultaProdutosPage() {
       {error && <p>Erro: {error}</p>}
       {success && <p>{success}</p>}
       {isPending && <p>Carregando...</p>}
-      <DataTable columns={columns} data={products} />
+      <DataTable columns={createColumns(handleDeleteProduct)} data={products} />
     </div>
   )
 }

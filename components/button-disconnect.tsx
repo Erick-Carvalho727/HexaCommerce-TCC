@@ -9,15 +9,15 @@ const font = Libre_Franklin({
   weight: ['500'],
 })
 
+async function handleSignOut() {
+  'use server'
+
+  await signOut({ redirectTo: '/login' })
+}
+
 export default async function ButtonDisconnect() {
   return (
-    <form
-      action={async () => {
-        'use server'
-
-        await signOut({ redirectTo: '/login' })
-      }}
-    >
+    <form action={handleSignOut}>
       <Button size={'none'} className="px-4 py-1 bg-black hover:bg-[#65696e]">
         <p className={cn('text-white text-sm font-medium', font.className)}>
           Sair

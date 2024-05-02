@@ -32,6 +32,8 @@ export default function CurrentTime() {
   }
 
   return (
-    <p className={cn('text-black text-sm font-medium', font.className)}></p>
+    <p className={cn('text-black text-sm font-medium', font.className)}>
+      {currentTime}
+    </p>
   )
 }

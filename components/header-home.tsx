@@ -1,10 +1,10 @@
-import { FaGear } from 'react-icons/fa6'
 import CurrentTime from './current-time'
 import ButtonDisconnect from './button-disconnect'
 import { auth } from '@/auth'
 // eslint-disable-next-line camelcase
 import { Libre_Franklin } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import SheetHomeConfig from './sheet-home-config'
 
 const fontLibre600 = Libre_Franklin({
   subsets: ['latin'],
@@ -16,10 +16,7 @@ export default async function HeaderHome() {
 
   return (
     <div className="mb-8 h-11 border border-black/20 rounded-2xl flex items-center justify-between px-6">
-      <FaGear
-        size={20}
-        className="cursor-pointer fill-[#969DA6] hover:fill-[#65696e]"
-      />
+      <SheetHomeConfig />
       <div>
         <h1
           className={cn(

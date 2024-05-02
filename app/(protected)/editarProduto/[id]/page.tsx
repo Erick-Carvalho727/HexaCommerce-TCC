@@ -5,16 +5,15 @@ import FormProduct from '@/components/form-product'
 // eslint-disable-next-line camelcase
 import { Libre_Franklin } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { useContext, useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { set, z } from 'zod'
+import { z } from 'zod'
 import { ProductSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getProductById } from '@/data/product'
 import { updateProduct } from '@/actions/updateProduct'
 import { useRouter } from 'next/navigation'
-import { RefreshContext } from '@/app/context/product'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
 
@@ -33,13 +32,9 @@ export default function EditarProdutoPage({
 }: {
   params: { id: string }
 }) {
-  const [error, setError] = useState<string | undefined>('')
-  const [success, setSuccess] = useState<string | undefined>('')
+  const [, setError] = useState<string | undefined>('')
+  const [, setSuccess] = useState<string | undefined>('')
   const [isPending, startTransition] = useTransition()
-  const { setRefreshProducts } = useContext(RefreshContext)
-  const { reset } = useForm({
-    resolver: zodResolver(ProductSchema),
-  })
   const router = useRouter()
 
   const form = useForm<z.infer<typeof ProductSchema>>({
@@ -75,7 +70,7 @@ export default function EditarProdutoPage({
           form.setValue('largura', data.product?.largura ?? '')
           form.setValue('comprimento', data.product?.comprimento ?? '')
           form.setValue('nomeProduto', data.product?.nomeProduto ?? '')
-          form.setValue('descricao', data.product?.desricao ?? '')
+          form.setValue('descricao', data.product?.descricao ?? '')
         })
       }
     })
@@ -93,8 +88,6 @@ export default function EditarProdutoPage({
               setError(data.error)
             }
             if (data.success) {
-              setRefreshProducts(true)
-
               toast(
                 <div className="flex space-x-2 items-center">
                   <CheckIcon className="text-emerald-500 mr-2" />

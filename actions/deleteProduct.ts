@@ -2,12 +2,15 @@
 
 import { db } from '@/lib/db'
 import { auth } from '@/auth'
+import { number } from 'zod'
 
 export const deleteProduct = async (idProduct: number[]) => {
   const session = await auth()
   if (!session || !session.user) {
     return { error: 'Usuário não autenticado!' }
   }
+
+  console.log(number)
 
   const idUser = session?.user.id
 

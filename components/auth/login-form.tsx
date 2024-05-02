@@ -50,11 +50,6 @@ export default function LoginForm() {
           if (data.error) {
             setError(data.error)
           }
-          if (data.success) {
-            setSuccess(data.success)
-          }
-        } else {
-          setError('Ocorreu um erro desconhecido!')
         }
       })
     })

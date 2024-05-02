@@ -75,3 +75,19 @@ export const ProductSchema = z
     message: 'Preço de venda deve ser pelo menos 20% maior que o custo',
     path: ['precoVenda'],
   })
+
+export const ProductSchemaSelector = z.object({
+  id: z.number(),
+  codigo: z.string(),
+  fabricante: z.string().nullable(),
+  peso: z.string().nullable(),
+  altura: z.string().nullable(),
+  largura: z.string().nullable(),
+  comprimento: z.string().nullable(),
+  nomeProduto: z.string().nullable(),
+  ean: z.string().nullable(),
+  custo: z.number(),
+  estoque: z.number(),
+  createdAt: z.date(),
+  precoVenda: z.number(),
+})
