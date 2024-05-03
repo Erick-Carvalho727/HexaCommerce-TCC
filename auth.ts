@@ -36,13 +36,32 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.nameCompany = user.nameCompany
       }
 
+      if (session.user) {
+        session.user.name = token.name
+        session.user.email = token.email ?? ''
+        session.user.nameCompany = token.nameCompany as
+          | string
+          | null
+          | undefined
+      }
+
       return session
     },
     async jwt({ token }) {
+      if (!token?.sub) return token
+
+      const existingUser = await getUserById(token.sub)
+
+      if (!existingUser) return token
+
+      token.name = existingUser.name
+      token.email = existingUser.email
+      token.nameCompany = existingUser.nameCompany
+
       return token
     },
   },
   adapter: PrismaAdapter(db),
-  session: { strategy: 'jwt', maxAge: 1 * 60 * 60 },
+  session: { strategy: 'jwt', updateAge: 24 * 60 * 60 },
   ...authConfig,
 })

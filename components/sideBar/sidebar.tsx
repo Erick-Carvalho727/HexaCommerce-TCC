@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { auth } from '@/auth'
 
 import logoHexa from '@/public/HexaCommerce.svg'
 import imagemTeste from '@/public/img.svg'
@@ -12,6 +11,7 @@ import CardUpgrade from './card-upgrade'
 // eslint-disable-next-line camelcase
 import { Libre_Franklin, Mulish } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { currentUser } from '@/lib/auth'
 
 const fontMulish400 = Mulish({
   subsets: ['latin'],
@@ -29,7 +29,7 @@ const fontLibre500 = Libre_Franklin({
 })
 
 export default async function SideBar() {
-  const session = await auth()
+  const user = await currentUser()
 
   return (
     <aside className="w-[316px] min-w-[316px] h-screen bg-black flex flex-col justify-evenly items-center fixed">
@@ -43,11 +43,9 @@ export default async function SideBar() {
           className="mb-4"
         />
         <h1 className={cn('text-white text-base', fontLibre600.className)}>
-          {session?.user?.name}
+          {user?.name}
         </h1>
-        <p className={cn('text-white text-xs', fontLibre500)}>
-          {session?.user?.email}
-        </p>
+        <p className={cn('text-white text-xs', fontLibre500)}>{user?.email}</p>
       </div>
       <div className="space-y-4 flex flex-col justify-center items-center">
         <ButtonSideBar link="/home" icon={iconHome} title="Home" />

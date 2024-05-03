@@ -91,3 +91,7 @@ export const ProductSchemaSelector = z.object({
   createdAt: z.date(),
   precoVenda: z.number(),
 })
+
+export const UserSchemaConfig = z.object({
+  name: z.optional(z.string()),
+})

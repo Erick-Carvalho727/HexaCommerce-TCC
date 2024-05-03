@@ -50,6 +50,7 @@ export default function ConsultaProdutosPage() {
         if (data.error) {
           console.error('Failed to delete product:', data.error)
         } else {
+          listProducts()
           console.log('Product deleted successfully', data.products)
         }
       })
