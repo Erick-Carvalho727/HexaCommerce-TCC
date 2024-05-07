@@ -10,8 +10,6 @@ export const deleteProduct = async (idProduct: number[]) => {
     return { error: 'Usuário não autenticado!' }
   }
 
-  console.log(number)
-
   const idUser = session?.user.id
 
   try {

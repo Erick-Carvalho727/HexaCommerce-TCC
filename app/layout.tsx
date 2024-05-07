@@ -5,6 +5,7 @@ import './globals.css'
 import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
+import { SheetProvider } from '@/providers/sheet-providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,22 +22,25 @@ export default async function RootLayout({
   const session = await auth()
 
   return (
-    <SessionProvider session={session}>
-      <html lang="pt-BR">
-        <Head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
-            rel="stylesheet"
-          />
-        </Head>
-        <body className={inter.className}>{children}</body>
-      </html>
-    </SessionProvider>
+    <html lang="pt-BR">
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <body className={inter.className}>
+        <SessionProvider session={session}>
+          {children}
+          <SheetProvider />
+        </SessionProvider>
+      </body>
+    </html>
   )
 }

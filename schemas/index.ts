@@ -94,4 +94,13 @@ export const ProductSchemaSelector = z.object({
 
 export const UserSchemaConfig = z.object({
   name: z.optional(z.string()),
+  email: z.optional(z.string().email()),
+  nameCompany: z.optional(z.string()),
+  canais: z.array(z.string()),
+})
+
+export const SaleSchema = z.object({
+  nomeProduto: z.string().min(1),
+  quantidade: z.number().min(1),
+  canal: z.string().min(1),
 })

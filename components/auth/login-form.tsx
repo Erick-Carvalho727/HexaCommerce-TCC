@@ -4,7 +4,7 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginSchema } from '@/schemas'
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 
 import {
   Form,
@@ -20,6 +20,7 @@ import { EyeClosedIcon, EyeOpenIcon, ReloadIcon } from '@radix-ui/react-icons'
 import FormError from '../form-error'
 import FormSuccess from '../form-success'
 import { login } from '@/actions/login'
+import { useRouter } from 'next/navigation'
 
 interface LoginResponse {
   error?: string
@@ -31,6 +32,7 @@ export default function LoginForm() {
   const [success, setSuccess] = useState<string | undefined>('')
   const [isPending, startTransition] = useTransition()
   const [isPasswordView, setIsPasswordView] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -49,6 +51,8 @@ export default function LoginForm() {
         if (data) {
           if (data.error) {
             setError(data.error)
+          } else {
+            router.push('/home')
           }
         }
       })

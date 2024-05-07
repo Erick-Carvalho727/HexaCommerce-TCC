@@ -8,6 +8,7 @@ declare module 'next-auth' {
   interface Session {
     user: {
       nameCompany?: string | null
+      canais?: string[] | null
     } & DefaultSession['user']
   }
 }
@@ -34,6 +35,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (user) {
         session.user.nameCompany = user.nameCompany
+        session.user.canais = user.canais
       }
 
       if (session.user) {
@@ -43,6 +45,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           | string
           | null
           | undefined
+        session.user.canais = token.canais as string[] | null | undefined
       }
 
       return session
@@ -57,6 +60,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.name = existingUser.name
       token.email = existingUser.email
       token.nameCompany = existingUser.nameCompany
+      token.canais = existingUser.canais
 
       return token
     },

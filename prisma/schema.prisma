@@ -20,11 +20,13 @@ model User {
   nameCompany String
   image       String?
   password    String
+  canais      String[]
   accounts    Account[]
   products    Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Sale      Sale[]
 }
 
 model Account {
@@ -65,6 +67,21 @@ model Product {
   peso        String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Sale      Sale[]
+}
+
+model Sale {
+  id         Int    @id @default(autoincrement())
+  userId     String
+  productId  Int
+  quantidade Int
+  canal      String
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

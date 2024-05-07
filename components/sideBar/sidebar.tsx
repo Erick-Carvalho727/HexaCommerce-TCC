@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 
 import logoHexa from '@/public/HexaCommerce.svg'
@@ -11,7 +13,7 @@ import CardUpgrade from './card-upgrade'
 // eslint-disable-next-line camelcase
 import { Libre_Franklin, Mulish } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { currentUser } from '@/lib/auth'
+import { useCurrentUser } from '@/hooks/use-current-user'
 
 const fontMulish400 = Mulish({
   subsets: ['latin'],
@@ -28,8 +30,8 @@ const fontLibre500 = Libre_Franklin({
   weight: ['500'],
 })
 
-export default async function SideBar() {
-  const user = await currentUser()
+export default function SideBar() {
+  const user = useCurrentUser()
 
   return (
     <aside className="w-[316px] min-w-[316px] h-screen bg-black flex flex-col justify-evenly items-center fixed">
@@ -59,11 +61,7 @@ export default async function SideBar() {
           icon={iconCadastroProdutos}
           title="Cadastro de Produtos"
         />
-        <ButtonSideBar
-          link="#"
-          icon={iconRealizarVenda}
-          title="Realizar uma Venda"
-        />
+        <ButtonSideBar icon={iconRealizarVenda} title="Realizar uma Venda" />
       </div>
       <div>
         <CardUpgrade />

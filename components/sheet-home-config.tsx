@@ -2,15 +2,12 @@
 
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
-import { FaGear } from 'react-icons/fa6'
 import {
   Form,
   FormControl,
@@ -19,21 +16,29 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { UserSchemaConfig } from '@/schemas'
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from './ui/button'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { FaSave } from 'react-icons/fa'
-import { Dispatch, SetStateAction, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 // eslint-disable-next-line camelcase
 import { Libre_Franklin } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { settings } from '@/actions/settings'
 import { useSession } from 'next-auth/react'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { currentUser } from '@/lib/auth'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import logoMl from '@/public/logo-ml.png'
+import logoShopee from '@/public/logo-shopee.png'
+import logoMagalu from '@/public/logo-magalu.png'
+import logoAmazon from '@/public/logo-amazon.svg'
+import Image from 'next/image'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import FormError from '@/components/form-error'
+import FormSuccess from '@/components/form-success'
+import { useNewSettings } from '@/features/use-new-settings'
 
 const fontLibre500 = Libre_Franklin({
   subsets: ['latin'],
@@ -45,21 +50,47 @@ export default function SheetHomeConfig() {
 
   const [error, setError] = useState<string | undefined>('')
   const [success, setSuccess] = useState<string | undefined>('')
+  const [formats, setFormats] = useState<string[]>(() => [])
   const [isPending, startTransition] = useTransition()
+  const { isOpen, onClose } = useNewSettings()
   const { update } = useSession()
 
   const form = useForm<z.infer<typeof UserSchemaConfig>>({
     resolver: zodResolver(UserSchemaConfig),
     defaultValues: {
       name: user?.name || undefined,
+      email: user?.email || undefined,
+      nameCompany: user?.nameCompany || undefined,
+      canais: user?.canais || undefined,
     },
   })
 
+  useEffect(() => {
+    if (isOpen === false) {
+      setError('')
+      setSuccess('')
+    }
+
+    if (isOpen === true) {
+      setFormats(user?.canais || [])
+      form.reset({
+        name: user?.name || undefined,
+        email: user?.email || undefined,
+        nameCompany: user?.nameCompany || undefined,
+        canais: formats || undefined,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, form, user?.canais, user?.email, user?.name, user?.nameCompany])
+
   const onSubmit = (values: z.infer<typeof UserSchemaConfig>) => {
-    console.log(values)
+    const formData = {
+      ...values,
+      canais: formats,
+    }
 
     startTransition(() => {
-      settings(values).then((data) => {
+      settings(formData).then((data) => {
         if (data.error) {
           setError(data.error)
         }
@@ -71,15 +102,16 @@ export default function SheetHomeConfig() {
     })
   }
 
+  const handleFormat = (
+    event: React.MouseEvent<HTMLElement>,
+    newFormats: string[],
+  ) => {
+    setFormats(newFormats)
+  }
+
   return (
     <>
-      <Sheet>
-        <SheetTrigger>
-          <FaGear
-            size={20}
-            className="cursor-pointer fill-[#969DA6] hover:fill-[#65696e]"
-          />
-        </SheetTrigger>
+      <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Configurações</SheetTitle>
@@ -97,7 +129,69 @@ export default function SheetHomeConfig() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nome</FormLabel>
+                        <FormLabel>
+                          {' '}
+                          <p
+                            className={cn(
+                              'uppercase text-black text-sm',
+                              fontLibre500.className,
+                            )}
+                          >
+                            Nome
+                          </p>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isPending}
+                            type="text"
+                            placeholder="shadcn"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          <p
+                            className={cn(
+                              'uppercase text-black text-sm',
+                              fontLibre500.className,
+                            )}
+                          >
+                            Email
+                          </p>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isPending}
+                            type="text"
+                            placeholder="shadcn"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="nameCompany"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          <p
+                            className={cn(
+                              'uppercase text-black text-sm',
+                              fontLibre500.className,
+                            )}
+                          >
+                            Nome da Empresa
+                          </p>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -110,12 +204,77 @@ export default function SheetHomeConfig() {
                     )}
                   />
                 </div>
+                <div className="mt-8">
+                  <p
+                    className={cn(
+                      'uppercase text-black text-sm mb-2',
+                      fontLibre500.className,
+                    )}
+                  >
+                    Canais
+                  </p>
+                  <ToggleButtonGroup
+                    orientation="vertical"
+                    value={formats}
+                    onChange={handleFormat}
+                    aria-label="text formatting"
+                    className="w-full"
+                  >
+                    <ToggleButton value="Mercado Livre" aria-label="bold">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={logoMl}
+                          height={25}
+                          alt=""
+                          className="py-2"
+                        />
+                      </div>
+                    </ToggleButton>
+                    <ToggleButton value="Shopee" aria-label="italic">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={logoShopee}
+                          height={25}
+                          alt=""
+                          className="py-2"
+                        />
+                      </div>
+                    </ToggleButton>
+                    <ToggleButton value="Magalu" aria-label="underlined">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={logoMagalu}
+                          height={18}
+                          alt=""
+                          className="mt-1 py-2"
+                        />
+                      </div>
+                    </ToggleButton>
+                    <ToggleButton value="Amazon" aria-label="color">
+                      <Image
+                        src={logoAmazon}
+                        height={18}
+                        alt=""
+                        className="py-2"
+                      />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </div>
                 <SheetFooter>
-                  <SheetClose>
-                    <Button className="mt-6" type="submit">
-                      Save changes
+                  <div className="flex flex-col w-full">
+                    <Button disabled={isPending} type="submit" className="mt-4">
+                      <ReloadIcon
+                        className={`${isPending ? 'mr-2 h-4 w-4 animate-spin' : 'hidden'}`}
+                      />
+                      <p className={cn('pl-1', fontLibre500.className)}>
+                        Salvar Informações
+                      </p>
                     </Button>
-                  </SheetClose>
+                    <div className="mt-4">
+                      <FormSuccess message={success} />
+                      <FormError message={error} />
+                    </div>
+                  </div>
                 </SheetFooter>
               </form>
             </Form>
