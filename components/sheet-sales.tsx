@@ -22,8 +22,6 @@ import { Button } from './ui/button'
 import { Libre_Franklin } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import FormError from '@/components/form-error'
-import FormSuccess from '@/components/form-success'
 import { useNewSales } from '@/features/use-new-sales'
 import { useForm } from 'react-hook-form'
 import { useEffect, useState, useTransition } from 'react'
@@ -40,6 +38,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { getProducts } from '@/actions/selectProduct'
 import { createSale } from '@/actions/createSale'
+import { toast } from 'sonner'
+import { Check, X } from 'lucide-react'
 
 const fontLibre500 = Libre_Franklin({
   subsets: ['latin'],
@@ -62,8 +62,6 @@ export default function SheetSales() {
 
   const { isOpen, onClose } = useNewSales()
   const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | undefined>('')
-  const [success, setSuccess] = useState<string | undefined>('')
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(
     undefined,
   )
@@ -73,19 +71,15 @@ export default function SheetSales() {
 
   const getProductsList = () => {
     startTransition(() => {
-      getProducts()
-        .then((data: ProductResponse) => {
-          if (data.error) setError(data.error)
-          if (data.products) {
-            const productDetails = data.products.map((product) => ({
-              nomeProduto: product.nomeProduto || 'Nome não disponível',
-              estoque: product.estoque,
-            }))
-            setProducts(productDetails)
-          }
-          if (data.success) setSuccess(data.success)
-        })
-        .catch((e) => setError(e))
+      getProducts().then((data: ProductResponse) => {
+        if (data.products) {
+          const productDetails = data.products.map((product) => ({
+            nomeProduto: product.nomeProduto || 'Nome não disponível',
+            estoque: product.estoque,
+          }))
+          setProducts(productDetails)
+        }
+      })
     })
   }
 
@@ -103,9 +97,6 @@ export default function SheetSales() {
       getProductsList()
       form.reset()
       setSelectedProduct(undefined)
-    } else {
-      setError('')
-      setSuccess('')
     }
   }, [isOpen, form])
 
@@ -113,22 +104,35 @@ export default function SheetSales() {
     startTransition(() => {
       createSale(values).then((data) => {
         if (data.error) {
-          setSuccess('')
-          setError(data.error)
+          onClose()
+          const success = false
+          abrirToast(data.error, success)
         }
         if (data.success) {
-          getProductsList()
-          setSuccess(data.success)
-          form.reset({
-            nomeProduto: '',
-            quantidade: 0,
-            canal: '',
-          })
-          setError('')
-          setSelectedProduct(undefined)
+          onClose()
+          const success = true
+          abrirToast(data.success, success)
         }
       })
     })
+  }
+
+  const abrirToast = (message: string, type: boolean) => {
+    toast(
+      <div className="flex space-x-2 items-center">
+        {type === true ? (
+          <>
+            <Check className="text-emerald-500" />
+            <h1>{message}</h1>
+          </>
+        ) : (
+          <>
+            <X className="text-emerald-500" />
+            <h1>{message}</h1>
+          </>
+        )}
+      </div>,
+    )
   }
 
   return (
@@ -148,52 +152,54 @@ export default function SheetSales() {
                   <FormField
                     control={form.control}
                     name="nomeProduto"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {' '}
-                          <p
-                            className={cn(
-                              'uppercase text-black text-sm',
-                              fontLibre500.className,
-                            )}
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel>
+                            {' '}
+                            <p
+                              className={cn(
+                                'uppercase text-black text-sm',
+                                fontLibre500.className,
+                              )}
+                            >
+                              Produto
+                            </p>
+                          </FormLabel>
+                          <Select
+                            onValueChange={(value) => {
+                              field.onChange(value)
+                              const product = products.find(
+                                (p) => p.nomeProduto === value,
+                              )
+                              setSelectedProduct(product)
+                            }}
+                            defaultValue=""
                           >
-                            Produto
-                          </p>
-                        </FormLabel>
-                        <Select
-                          onValueChange={(value) => {
-                            field.onChange(value)
-                            const product = products.find(
-                              (p) => p.nomeProduto === value,
-                            )
-                            setSelectedProduct(product)
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger disabled={isPending}>
-                              <SelectValue placeholder="Selecione o produto" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {products.map((product, index) => (
-                              <SelectItem
-                                key={index}
-                                value={product.nomeProduto}
-                              >
-                                {product.nomeProduto}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                          {selectedProduct && (
-                            <FormDescription>
-                              Estoque do produto: {selectedProduct.estoque}
-                            </FormDescription>
-                          )}
-                        </Select>
-                      </FormItem>
-                    )}
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o produto" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {products.map((product, index) => (
+                                <SelectItem
+                                  key={index}
+                                  value={product.nomeProduto}
+                                >
+                                  {product.nomeProduto}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                            {selectedProduct && (
+                              <FormDescription>
+                                Estoque do produto: {selectedProduct.estoque}
+                              </FormDescription>
+                            )}
+                          </Select>
+                        </FormItem>
+                      )
+                    }}
                   />
                   <FormField
                     control={form.control}
@@ -273,10 +279,7 @@ export default function SheetSales() {
                         Salvar Informações
                       </p>
                     </Button>
-                    <div className="mt-4">
-                      <FormSuccess message={success} />
-                      <FormError message={error} />
-                    </div>
+                    <div className="mt-4"></div>
                   </div>
                 </SheetFooter>
               </form>

@@ -17,7 +17,13 @@ const fontLibre500 = Libre_Franklin({
   weight: ['500'],
 })
 
-export default function HeaderConsultaProdutos() {
+type HeaderConsultaProdutosProps = {
+  isPending?: boolean
+}
+
+export default function HeaderConsultaProdutos({
+  isPending,
+}: HeaderConsultaProdutosProps) {
   const router = useRouter()
 
   const onClickConsultarProdutos = () => {
@@ -33,6 +39,7 @@ export default function HeaderConsultaProdutos() {
         <Button
           type="button"
           onClick={onClickConsultarProdutos}
+          disabled={isPending}
           className=" text-white hover:text-white hover:bg-[#494c50]"
         >
           <FilePlusIcon height={12} width={12} />

@@ -92,6 +92,24 @@ export const ProductSchemaSelector = z.object({
   precoVenda: z.number(),
 })
 
+export const SaleSchemaSelector = z.object({
+  nomeProduto: z.string().nullable(),
+  canal: z.string().nullable(),
+  quantidade: z.number(),
+  cofins: z.number(),
+  createdAt: z.date(),
+  icms: z.number(),
+  lucroTotalComImposto: z.number(),
+  NF: z.string().nullable(),
+  pis: z.number(),
+  ipi: z.number(),
+  totalTriubutos: z.number(),
+  valorTotalCusto: z.number(),
+  valorTotalLucro: z.number(),
+  valorTotalVenda: z.number(),
+  id: z.string().nullable(),
+})
+
 export const UserSchemaConfig = z.object({
   name: z.optional(z.string()),
   email: z.optional(z.string().email()),

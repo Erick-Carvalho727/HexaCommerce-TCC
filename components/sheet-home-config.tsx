@@ -36,9 +36,9 @@ import logoMagalu from '@/public/logo-magalu.png'
 import logoAmazon from '@/public/logo-amazon.svg'
 import Image from 'next/image'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import FormError from '@/components/form-error'
-import FormSuccess from '@/components/form-success'
 import { useNewSettings } from '@/features/use-new-settings'
+import { toast } from 'sonner'
+import { Check, X } from 'lucide-react'
 
 const fontLibre500 = Libre_Franklin({
   subsets: ['latin'],
@@ -48,8 +48,6 @@ const fontLibre500 = Libre_Franklin({
 export default function SheetHomeConfig() {
   const user = useCurrentUser()
 
-  const [error, setError] = useState<string | undefined>('')
-  const [success, setSuccess] = useState<string | undefined>('')
   const [formats, setFormats] = useState<string[]>(() => [])
   const [isPending, startTransition] = useTransition()
   const { isOpen, onClose } = useNewSettings()
@@ -66,11 +64,6 @@ export default function SheetHomeConfig() {
   })
 
   useEffect(() => {
-    if (isOpen === false) {
-      setError('')
-      setSuccess('')
-    }
-
     if (isOpen === true) {
       setFormats(user?.canais || [])
       form.reset({
@@ -92,14 +85,35 @@ export default function SheetHomeConfig() {
     startTransition(() => {
       settings(formData).then((data) => {
         if (data.error) {
-          setError(data.error)
+          const success = false
+          abrirToast(data.error, success)
         }
         if (data.success) {
           update()
-          setSuccess(data.success)
+          onClose()
+          const success = true
+          abrirToast(data.success, success)
         }
       })
     })
+  }
+
+  const abrirToast = (message: string, type: boolean) => {
+    toast(
+      <div className="flex space-x-2 items-center">
+        {type === true ? (
+          <>
+            <Check className="text-emerald-500" />
+            <h1>{message}</h1>
+          </>
+        ) : (
+          <>
+            <X className="text-emerald-500" />
+            <h1>{message}</h1>
+          </>
+        )}
+      </div>,
+    )
   }
 
   const handleFormat = (
@@ -270,10 +284,7 @@ export default function SheetHomeConfig() {
                         Salvar Informações
                       </p>
                     </Button>
-                    <div className="mt-4">
-                      <FormSuccess message={success} />
-                      <FormError message={error} />
-                    </div>
+                    <div className="mt-4"></div>
                   </div>
                 </SheetFooter>
               </form>

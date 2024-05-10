@@ -4,6 +4,7 @@ import * as z from 'zod'
 import { SaleSchema } from '@/schemas'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
+import { format } from 'date-fns'
 
 export const createSale = async (values: z.infer<typeof SaleSchema>) => {
   const validatedFields = SaleSchema.safeParse(values)
@@ -27,6 +28,8 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
     select: {
       id: true,
       estoque: true,
+      custo: true,
+      precoVenda: true,
     },
   })
 
@@ -36,12 +39,19 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
     return { error: 'Quantidade em estoque insuficiente!' }
   }
 
-  await db.product.update({
-    where: { id: findIdProduct!.id },
-    data: {
-      estoque: novoEstoque,
-    },
-  })
+  const datePart = format(new Date(), 'yyyyMMddHHmmss') // Formata a data e hora atual
+  const uniquePart = Math.floor(Math.random() * 90000) + 10000 // Gera um número entre 10000 e 99999
+  const NF = `NF${datePart}${uniquePart}`
+
+  const custoTotal = quantidade * findIdProduct!.custo
+  const precoVendaTotal = quantidade * findIdProduct!.precoVenda
+  const lucro = precoVendaTotal - custoTotal
+  const icms = precoVendaTotal * 0.18
+  const ipi = precoVendaTotal * 0.04
+  const pis = precoVendaTotal * 0.0186
+  const cofins = precoVendaTotal * 0.0854
+  const totalTributos = icms + ipi + pis + cofins
+  const lucroTotalComImposto = lucro - totalTributos
 
   console.log(quantidade, canal, idUser, findIdProduct!.id)
 
@@ -50,8 +60,25 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
       data: {
         quantidade,
         canal,
+        valorTotalCusto: custoTotal,
+        valorTotalVenda: precoVendaTotal,
+        valorTotalLucro: lucro,
+        NF,
+        icms,
+        ipi,
+        pis,
+        cofins,
+        totalTriubutos: totalTributos,
+        lucroTotalComImposto,
         userId: idUser!,
         productId: findIdProduct!.id,
+      },
+    })
+
+    await db.product.update({
+      where: { id: findIdProduct!.id },
+      data: {
+        estoque: novoEstoque,
       },
     })
 

@@ -74,11 +74,21 @@ model Product {
 }
 
 model Sale {
-  id         Int    @id @default(autoincrement())
-  userId     String
-  productId  Int
-  quantidade Int
-  canal      String
+  id                   Int    @id @default(autoincrement())
+  userId               String
+  productId            Int
+  quantidade           Int
+  canal                String
+  valorTotalCusto      Float
+  valorTotalVenda      Float
+  valorTotalLucro      Float
+  NF                   String
+  icms                 Float
+  ipi                  Float
+  pis                  Float
+  cofins               Float
+  totalTriubutos       Float
+  lucroTotalComImposto Float
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
