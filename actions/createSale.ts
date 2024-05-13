@@ -13,7 +13,7 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
     return { error: 'Campos inválidos!' }
   }
 
-  const { canal, quantidade, nomeProduto } = validatedFields.data
+  const { canal, quantidade, nomeProduto, status } = validatedFields.data
 
   const session = await auth()
   if (!session || !session.user) {
@@ -72,8 +72,12 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
         lucroTotalComImposto,
         userId: idUser!,
         productId: findIdProduct!.id,
+        status,
       },
     })
+
+    if (status === 'Cancelado')
+      return { sale, success: 'Venda cadastrada com sucesso!' }
 
     await db.product.update({
       where: { id: findIdProduct!.id },

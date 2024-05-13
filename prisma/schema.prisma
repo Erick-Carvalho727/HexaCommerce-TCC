@@ -83,6 +83,7 @@ model Sale {
   valorTotalVenda      Float
   valorTotalLucro      Float
   NF                   String
+  status               String
   icms                 Float
   ipi                  Float
   pis                  Float

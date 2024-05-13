@@ -6,7 +6,7 @@ type useNewSale = {
   onClose: () => void
 }
 
-export const useNewSales = create<useNewSale>((set) => ({
+export const useSale = create<useNewSale>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),

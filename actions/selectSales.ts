@@ -2,8 +2,9 @@
 
 import { db } from '@/lib/db'
 import { auth } from '@/auth'
+import { DateRange } from 'react-day-picker'
 
-export const getSales = async () => {
+export const getSales = async (date: DateRange | undefined) => {
   const session = await auth()
   if (!session || !session.user) {
     return { error: 'Usuário não autenticado!' }
@@ -29,18 +30,27 @@ export const getSales = async () => {
         valorTotalLucro: true,
         valorTotalVenda: true,
         id: true,
+        status: true,
       },
       where: {
         userId: idUser,
+        createdAt: {
+          gte: date?.from,
+          lte: date?.to,
+        },
       },
     })
 
     const salesWithCodigoAsString = sales.map((sale) => ({
       ...sale,
-      codigo: sale.id.toString(),
+      numeroDoPedido: sale.id.toString(),
       nomeProduto: sale.product.nomeProduto,
     }))
 
-    return { sales: salesWithCodigoAsString }
-  } catch (error) {}
+    return {
+      sales: salesWithCodigoAsString,
+    }
+  } catch (error) {
+    return { error: 'Não foi possível carregar as vendas!' }
+  }
 }

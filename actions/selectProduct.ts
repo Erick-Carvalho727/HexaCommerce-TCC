@@ -40,7 +40,6 @@ export const getProducts = async () => {
 
     return { products: productsWithCodigoAsString }
   } catch (error) {
-    console.error('Erro ao buscar produtos:', error)
     return { error: 'Erro ao buscar os produtos, tente novamente mais tarde.' }
   }
 }

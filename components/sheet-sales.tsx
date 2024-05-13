@@ -89,6 +89,7 @@ export default function SheetSales() {
       nomeProduto: '',
       quantidade: 0,
       canal: '',
+      status: '',
     },
   })
 
@@ -262,6 +263,47 @@ export default function SheetSales() {
                                   {canal}
                                 </SelectItem>
                               ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          <p
+                            className={cn(
+                              'uppercase text-black text-sm',
+                              fontLibre500.className,
+                            )}
+                          >
+                            Status da Venda
+                          </p>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger disabled={isPending}>
+                                <SelectValue placeholder="Selecione o Status da Venda" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Concluído">
+                                Concluído
+                              </SelectItem>
+                              <SelectItem value="Aguardando Pagamento">
+                                Aguardando Pagamento
+                              </SelectItem>
+                              <SelectItem value="Cancelado">
+                                Cancelado
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>

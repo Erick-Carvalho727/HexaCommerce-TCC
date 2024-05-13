@@ -107,7 +107,8 @@ export const SaleSchemaSelector = z.object({
   valorTotalCusto: z.number(),
   valorTotalLucro: z.number(),
   valorTotalVenda: z.number(),
-  id: z.string().nullable(),
+  status: z.string().nullable(),
+  numeroDoPedido: z.string().nullable(),
 })
 
 export const UserSchemaConfig = z.object({
@@ -121,4 +122,5 @@ export const SaleSchema = z.object({
   nomeProduto: z.string().min(1),
   quantidade: z.number().min(1),
   canal: z.string().min(1),
+  status: z.string().min(1),
 })
