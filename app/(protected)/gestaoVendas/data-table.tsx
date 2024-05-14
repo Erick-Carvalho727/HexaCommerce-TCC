@@ -7,6 +7,8 @@ import {
   getPaginationRowModel,
   useReactTable,
   ColumnFiltersState,
+  SortingState,
+  getSortedRowModel,
   VisibilityState,
   getFilteredRowModel,
 } from '@tanstack/react-table'
@@ -38,15 +40,20 @@ import {
   Draggable,
   DraggableProvided,
   DroppableProvided,
-  DraggableStateSnapshot,
 } from '@hello-pangea/dnd'
-import { is } from 'date-fns/locale'
+import SelectOrderBy from './select-order-by'
+import FilterByCanais from './filter-by-canais'
+import FilterByStatus from './filter-by-status'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   date?: DateRange | undefined
+  statusFilter: string[]
+  canaisFilter?: string[] | null | undefined
   setDate?: Dispatch<SetStateAction<DateRange | undefined>>
+  setStatusFilter: Dispatch<SetStateAction<string[]>>
+  setCanaisFilter: Dispatch<SetStateAction<string[] | null | undefined>>
 }
 
 export function DataTable<TData, TValue>({
@@ -54,11 +61,16 @@ export function DataTable<TData, TValue>({
   data,
   date,
   setDate,
+  statusFilter,
+  setStatusFilter,
+  canaisFilter,
+  setCanaisFilter,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnOrder, setColumnOrder] =
     useState<ColumnDef<TData, TValue>[]>(columns)
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -68,7 +80,10 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       columnFilters,
       columnVisibility,
     },
@@ -113,9 +128,18 @@ export function DataTable<TData, TValue>({
               .getColumn('numeroDoPedido')
               ?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm mr-4"
         />
         <div className="flex items-center space-x-4">
+          <FilterByCanais
+            canaisFilter={canaisFilter}
+            setCanaisFilter={setCanaisFilter}
+          />
+          <FilterByStatus
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+          />
+          <SelectOrderBy setSorting={setSorting} />
           <DatePickerSales date={date} setDate={setDate} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -157,6 +181,7 @@ export function DataTable<TData, TValue>({
                 <TableHeader
                   {...provided.droppableProps}
                   ref={provided.innerRef}
+                  className="table"
                 >
                   <TableRow>
                     {table.getHeaderGroups().map((headerGroup) =>
@@ -172,7 +197,7 @@ export function DataTable<TData, TValue>({
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
                               key={header.id}
-                              className="min-w-[180px]"
+                              className="min-w-[250px] hover:bg-gray-200"
                             >
                               {header.isPlaceholder
                                 ? null
@@ -190,18 +215,22 @@ export function DataTable<TData, TValue>({
                 </TableHeader>
               )}
             </Droppable>
+
+            <TableBody>
+              {table.getRowModel().rows.map((row, index) => (
+                <TableRow key={index} className="table">
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell className="min-w-[250px]" key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
           </DragDropContext>
-          <TableBody>
-            {table.getRowModel().rows.map((row, index) => (
-              <TableRow key={index}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell className="min-w-[180px]" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">

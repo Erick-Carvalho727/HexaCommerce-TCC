@@ -4,7 +4,11 @@ import { db } from '@/lib/db'
 import { auth } from '@/auth'
 import { DateRange } from 'react-day-picker'
 
-export const getSales = async (date: DateRange | undefined) => {
+export const getSales = async (
+  date: DateRange | undefined,
+  statusFilter: string[],
+  canaisFilter: string[] | null | undefined,
+) => {
   const session = await auth()
   if (!session || !session.user) {
     return { error: 'Usuário não autenticado!' }
@@ -37,6 +41,12 @@ export const getSales = async (date: DateRange | undefined) => {
         createdAt: {
           gte: date?.from,
           lte: date?.to,
+        },
+        status: {
+          in: statusFilter,
+        },
+        canal: {
+          in: canaisFilter || [],
         },
       },
     })

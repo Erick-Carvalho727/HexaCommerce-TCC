@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Loader2 } from 'lucide-react'
 import { DateRange } from 'react-day-picker'
 import { addDays } from 'date-fns'
+import { useCurrentUser } from '@/hooks/use-current-user'
 
 interface SaleResponse {
   sales?: z.infer<typeof SaleSchemaSelector>[]
@@ -19,6 +20,8 @@ interface SaleResponse {
 }
 
 export default function GestaoVendasPage() {
+  const user = useCurrentUser()
+
   const [, setError] = useState<string | undefined>('')
   const [isPending, startTransition] = useTransition()
   const [sales, setSales] = useState<z.infer<typeof SaleSchemaSelector>[]>([])
@@ -31,10 +34,18 @@ export default function GestaoVendasPage() {
       to: toDate,
     }
   })
+  const [statusFilter, setStatusFilter] = useState<string[]>([
+    'Concluído',
+    'Aguardando Pagamento',
+    'Cancelado',
+  ])
+  const [canaisFilter, setCanaisFilter] = useState<string[] | null | undefined>(
+    user?.canais ? user.canais : [],
+  )
 
   const listSales = () => {
     startTransition(() => {
-      getSales(date)
+      getSales(date, statusFilter, canaisFilter)
         .then((data: SaleResponse) => {
           if (data.sales) setSales(data.sales)
         })
@@ -45,7 +56,7 @@ export default function GestaoVendasPage() {
   useEffect(() => {
     listSales()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date])
+  }, [date, statusFilter, canaisFilter])
 
   if (isPending) {
     return (
@@ -70,7 +81,16 @@ export default function GestaoVendasPage() {
   return (
     <div>
       <HeaderGestaoVendas />
-      <DataTable columns={columns} data={sales} setDate={setDate} date={date} />
+      <DataTable
+        columns={columns}
+        data={sales}
+        setDate={setDate}
+        date={date}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        canaisFilter={canaisFilter}
+        setCanaisFilter={setCanaisFilter}
+      />
     </div>
   )
 }
