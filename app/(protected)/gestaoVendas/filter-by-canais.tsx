@@ -40,7 +40,6 @@ export default function FilterByCanais({
 
   const handleReset = () => {
     setSelectedCanais(user?.canais)
-    setCanaisFilter(user?.canais || [])
   }
 
   const handleApply = () => {

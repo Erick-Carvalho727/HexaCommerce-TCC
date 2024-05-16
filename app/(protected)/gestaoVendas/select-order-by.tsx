@@ -8,14 +8,6 @@ import {
 } from '@/components/ui/select'
 import { SortingState } from '@tanstack/react-table'
 import { Dispatch, SetStateAction, useState } from 'react'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { PopoverClose } from '@radix-ui/react-popover'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Separator } from '@/components/ui/separator'
 
 interface SelectOrderByProps {
   setSorting: Dispatch<SetStateAction<SortingState>>

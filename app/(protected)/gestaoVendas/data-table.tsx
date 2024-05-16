@@ -44,6 +44,10 @@ import {
 import SelectOrderBy from './select-order-by'
 import FilterByCanais from './filter-by-canais'
 import FilterByStatus from './filter-by-status'
+import { PackageX } from 'lucide-react'
+// eslint-disable-next-line camelcase
+import { Libre_Franklin } from 'next/font/google'
+import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -55,6 +59,11 @@ interface DataTableProps<TData, TValue> {
   setStatusFilter: Dispatch<SetStateAction<string[]>>
   setCanaisFilter: Dispatch<SetStateAction<string[] | null | undefined>>
 }
+
+const fontLibre600 = Libre_Franklin({
+  subsets: ['latin'],
+  weight: ['500'],
+})
 
 export function DataTable<TData, TValue>({
   columns,
@@ -110,9 +119,20 @@ export function DataTable<TData, TValue>({
     )
       return
     if (type === 'column') {
-      reorderColumn(source.index, destination.index)
+      const columns = table.getAllColumns()
+      let startIndex = source.index
+      let endIndex = destination.index
+      for (let i = 0; i < columns.length; i++) {
+        if (!columns[i].getIsVisible()) {
+          if (startIndex >= i) startIndex++
+          if (endIndex >= i) endIndex++
+        }
+      }
+      reorderColumn(startIndex, endIndex)
     }
   }
+
+  console.log(data)
 
   return (
     <div>
@@ -131,19 +151,10 @@ export function DataTable<TData, TValue>({
           className="max-w-sm mr-4"
         />
         <div className="flex items-center space-x-4">
-          <FilterByCanais
-            canaisFilter={canaisFilter}
-            setCanaisFilter={setCanaisFilter}
-          />
-          <FilterByStatus
-            statusFilter={statusFilter}
-            setStatusFilter={setStatusFilter}
-          />
           <SelectOrderBy setSorting={setSorting} />
-          <DatePickerSales date={date} setDate={setDate} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" className="ml-auto font-normal">
                 Colunas Exibidas
               </Button>
             </DropdownMenuTrigger>
@@ -169,70 +180,105 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-md border">
-        <Table>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable
-              droppableId="columns"
-              type="column"
-              direction="horizontal"
-            >
-              {(provided: DroppableProvided) => (
-                <TableHeader
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="table"
-                >
-                  <TableRow>
-                    {table.getHeaderGroups().map((headerGroup) =>
-                      headerGroup.headers.map((header, index) => (
-                        <Draggable
-                          key={header.id}
-                          draggableId={header.id}
-                          index={index}
-                        >
-                          {(provided: DraggableProvided) => (
-                            <TableHead
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              ref={provided.innerRef}
-                              key={header.id}
-                              className="min-w-[250px] hover:bg-gray-200"
-                            >
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                            </TableHead>
-                          )}
-                        </Draggable>
-                      )),
-                    )}
-                    {provided.placeholder}
-                  </TableRow>
-                </TableHeader>
-              )}
-            </Droppable>
-
-            <TableBody>
-              {table.getRowModel().rows.map((row, index) => (
-                <TableRow key={index} className="table">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell className="min-w-[250px]" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </DragDropContext>
-        </Table>
+      <div className="flex justify-between mb-4">
+        <div className="space-x-4">
+          <FilterByCanais
+            canaisFilter={canaisFilter}
+            setCanaisFilter={setCanaisFilter}
+          />
+          <FilterByStatus
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+          />
+        </div>
+        <div>
+          {' '}
+          <DatePickerSales date={date} setDate={setDate} />
+        </div>
       </div>
+
+      {data.length === 0 ? (
+        <div className="rounded-md border flex items-center flex-col justify-center h-80">
+          <PackageX size={45} className="text-black mb-4" />
+          <h1 className={cn('text-black', fontLibre600.className)}>
+            Nenhum produto encontrado nessas condições.
+          </h1>
+        </div>
+      ) : (
+        <div className="rounded-md border">
+          <Table>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable
+                droppableId="columns"
+                type="column"
+                direction="horizontal"
+              >
+                {(provided: DroppableProvided) => (
+                  <TableHeader
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="table"
+                  >
+                    <TableRow>
+                      {table.getHeaderGroups().map((headerGroup) =>
+                        headerGroup.headers.map((header, index) => (
+                          <Draggable
+                            key={header.id}
+                            draggableId={header.id}
+                            index={index}
+                          >
+                            {(provided: DraggableProvided) => (
+                              <TableHead
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                                key={header.id}
+                                className="min-w-[250px] hover:bg-gray-200"
+                              >
+                                {header.isPlaceholder
+                                  ? null
+                                  : flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext(),
+                                    )}
+                              </TableHead>
+                            )}
+                          </Draggable>
+                        )),
+                      )}
+                      {provided.placeholder}
+                    </TableRow>
+                  </TableHeader>
+                )}
+              </Droppable>
+
+              <TableBody>
+                {table.getRowModel().rows.map((row, index) => (
+                  <TableRow key={index} className="table">
+                    {(() => {
+                      const visibleCells = row.getVisibleCells()
+                      return row.getAllCells().map((cell) => (
+                        <TableCell
+                          style={{
+                            display: visibleCells.includes(cell) ? '' : 'none',
+                          }}
+                          className="min-w-[250px]"
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))
+                    })()}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </DragDropContext>
+          </Table>
+        </div>
+      )}
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"

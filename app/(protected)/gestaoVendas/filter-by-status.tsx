@@ -33,7 +33,7 @@ export default function FilterByStatus({
   }
 
   const handleReset = () => {
-    setStatusFilter(['Concluído', 'Aguardando Pagamento', 'Cancelado'])
+    setSelectedStatus(['Concluído', 'Aguardando Pagamento', 'Cancelado'])
   }
 
   const handleApply = () => {
