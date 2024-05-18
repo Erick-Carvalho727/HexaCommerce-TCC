@@ -36,6 +36,7 @@ export const createProduct = async (values: z.infer<typeof ProductSchema>) => {
   const existingProductCodigo = await db.product.findFirst({
     where: {
       codigo: validatedFields.data.codigo,
+      userId: idUser,
     },
   })
 
@@ -46,6 +47,7 @@ export const createProduct = async (values: z.infer<typeof ProductSchema>) => {
   const existingProductEan = await db.product.findFirst({
     where: {
       ean: validatedFields.data.ean,
+      userId: idUser,
     },
   })
 
@@ -57,6 +59,7 @@ export const createProduct = async (values: z.infer<typeof ProductSchema>) => {
     where: {
       nomeProduto: validatedFields.data.nomeProduto,
       fabricante: validatedFields.data.fabricante,
+      userId: idUser,
     },
   })
 

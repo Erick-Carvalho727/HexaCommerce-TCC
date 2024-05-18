@@ -55,8 +55,8 @@ model Product {
   userId      String  @map("user_id")
   nomeProduto String
   descricao   String?
-  codigo      Int     @unique
-  ean         String  @unique
+  codigo      Int
+  ean         String
   fabricante  String?
   custo       Float
   precoVenda  Float

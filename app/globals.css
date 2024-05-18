@@ -1,6 +1,14 @@
 @tailwind base;
   @tailwind components;
   @tailwind utilities;
+  
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500&display=swap');
+
+  .font-libre {
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 10px;
+  }
+
 
 html,
 body,

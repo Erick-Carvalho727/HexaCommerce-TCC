@@ -1,7 +1,7 @@
 'use client'
 
 import { CalendarIcon } from '@radix-ui/react-icons'
-import { addDays, format } from 'date-fns'
+import { endOfWeek, format, startOfWeek } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { ptBR } from 'date-fns/locale'
 
@@ -32,7 +32,8 @@ export function DatePickerSales({ date, setDate }: DatePickerSalesProps) {
 
   const onReset = () => {
     if (setDateNow) {
-      setDateNow({ from: new Date(), to: addDays(new Date(), 7) })
+      const today = new Date()
+      setDateNow({ from: startOfWeek(today), to: endOfWeek(today) })
     }
   }
 

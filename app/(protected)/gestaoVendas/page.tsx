@@ -10,7 +10,7 @@ import { getSales } from '@/actions/selectSales'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Loader2 } from 'lucide-react'
 import { DateRange } from 'react-day-picker'
-import { addDays } from 'date-fns'
+import { endOfWeek, startOfWeek } from 'date-fns'
 import { useCurrentUser } from '@/hooks/use-current-user'
 
 interface SaleResponse {
@@ -28,10 +28,10 @@ export default function GestaoVendasPage() {
   const [date, setDate] = useState<DateRange | undefined>(() => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const toDate = addDays(today, 7)
+
     return {
-      from: today,
-      to: toDate,
+      from: startOfWeek(today),
+      to: endOfWeek(today),
     }
   })
   const [statusFilter, setStatusFilter] = useState<string[]>([
