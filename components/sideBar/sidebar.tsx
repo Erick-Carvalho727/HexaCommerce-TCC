@@ -34,15 +34,33 @@ export default function SideBar() {
   const user = useCurrentUser()
 
   return (
-    <aside className="w-[316px] min-w-[316px] h-screen bg-black flex flex-col justify-evenly items-center fixed">
-      <Image src={logoHexa} alt="" height={45} />
+    <aside className="w-[250px] notebook:w-[316px] h-screen bg-black flex flex-col justify-evenly items-center fixed">
+      <Image
+        src={logoHexa}
+        alt=""
+        height={35}
+        className="block notebook:hidden"
+      />
+      <Image
+        src={logoHexa}
+        alt=""
+        height={45}
+        className="hidden notebook:block"
+      />
       <div className="flex items-center justify-center flex-col">
+        <Image
+          src={imagemTeste}
+          alt=""
+          height={50}
+          width={50}
+          className="mb-4 block notebook:hidden"
+        />
         <Image
           src={imagemTeste}
           alt=""
           height={70}
           width={70}
-          className="mb-4"
+          className="mb-4 hidden notebook:block"
         />
         <h1 className={cn('text-white text-base', fontLibre600.className)}>
           {user?.name}

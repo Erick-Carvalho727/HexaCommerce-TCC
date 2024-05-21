@@ -23,7 +23,7 @@ export default function SideBarLayout({
     <>
       <div className="flex">
         <SideBar />
-        <main className="w-full pl-[348px] pr-16 my-8">
+        <main className="w-full notebook:pl-[348px] pl-[282px] pr-8 my-8">
           <HeaderHome />
           {children}
           <Toaster />

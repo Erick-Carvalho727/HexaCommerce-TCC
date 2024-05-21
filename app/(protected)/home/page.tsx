@@ -46,6 +46,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     listDadosGerais()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
   const listDadosGerais = () => {

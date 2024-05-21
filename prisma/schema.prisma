@@ -85,7 +85,6 @@ model Sale {
   NF                   String
   status               String
   icms                 Float
-  ipi                  Float
   pis                  Float
   cofins               Float
   totalTriubutos       Float

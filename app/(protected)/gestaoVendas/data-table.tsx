@@ -58,6 +58,7 @@ interface DataTableProps<TData, TValue> {
   setDate?: Dispatch<SetStateAction<DateRange | undefined>>
   setStatusFilter: Dispatch<SetStateAction<string[]>>
   setCanaisFilter: Dispatch<SetStateAction<string[] | null | undefined>>
+  canais: string[]
 }
 
 const fontLibre600 = Libre_Franklin({
@@ -68,6 +69,7 @@ const fontLibre600 = Libre_Franklin({
 export function DataTable<TData, TValue>({
   columns,
   data,
+  canais,
   date,
   setDate,
   statusFilter,
@@ -185,6 +187,7 @@ export function DataTable<TData, TValue>({
           <FilterByCanais
             canaisFilter={canaisFilter}
             setCanaisFilter={setCanaisFilter}
+            canais={canais}
           />
           <FilterByStatus
             statusFilter={statusFilter}

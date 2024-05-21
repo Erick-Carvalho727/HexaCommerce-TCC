@@ -150,7 +150,9 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'Lucro Sem Imposto',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted
           row={row}
@@ -167,7 +169,9 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'Lucro Com Imposto',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted
           row={row}
@@ -184,7 +188,9 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'Total de Tributos',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted
           row={row}
@@ -201,22 +207,11 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'ICMS',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted row={row} column="icms" isCancelled={isCancelled} />
-      )
-    },
-  },
-  {
-    accessorKey: 'ipi',
-    header: () => {
-      return <RowHeaderIcon nameColumn="IPI" />
-    },
-    propsColumn: 'IPI',
-    cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
-      return (
-        <RowMoneyFormatted row={row} column="ipi" isCancelled={isCancelled} />
       )
     },
   },
@@ -227,7 +222,9 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'PIS',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted row={row} column="pis" isCancelled={isCancelled} />
       )
@@ -240,7 +237,9 @@ export const columns: ColumnDef<z.infer<typeof SaleSchemaSelector>>[] = [
     },
     propsColumn: 'COFINS',
     cell: ({ row }) => {
-      const isCancelled = row.getValue('status') === 'Cancelado'
+      const isCancelled =
+        row.getValue('status') === 'Cancelado' ||
+        row.getValue('status') === 'Aguardando Pagamento'
       return (
         <RowMoneyFormatted
           row={row}

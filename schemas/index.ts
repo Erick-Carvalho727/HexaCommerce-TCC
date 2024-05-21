@@ -102,7 +102,6 @@ export const SaleSchemaSelector = z.object({
   lucroTotalComImposto: z.number(),
   NF: z.string().nullable(),
   pis: z.number(),
-  ipi: z.number(),
   totalTriubutos: z.number(),
   valorTotalCusto: z.number(),
   valorTotalLucro: z.number(),

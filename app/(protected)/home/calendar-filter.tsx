@@ -51,6 +51,7 @@ export default function CalendarFilter({
           min={2}
           className="bg-gray-400/5 day_selected:bg-green-500 rounded-2xl"
         />
+
         <div className="flex space-x-4 pt-4">
           <Button
             disabled={isPending}

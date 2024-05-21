@@ -22,7 +22,7 @@ import {
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { ptBR } from 'date-fns/locale'
-import { Circle } from 'lucide-react'
+import { Circle, PackageX } from 'lucide-react'
 
 const fontLibre500 = Libre_Franklin({
   subsets: ['latin'],
@@ -91,6 +91,8 @@ export default function CardGrafico({ dadosPorCanal, date }: CardGraficoProps) {
     lucroLiquido: valores.lucroLiquido,
   }))
 
+  console.log(data)
+
   return (
     <div className="border rounded-md p-4">
       <h1 className={cn('text-2xl pb-4', fontLibre500.className)}>
@@ -116,41 +118,52 @@ export default function CardGrafico({ dadosPorCanal, date }: CardGraficoProps) {
             )}
           </CardDescription>
         </CardHeader>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data} barCategoryGap="20%" barGap={25}>
-            <XAxis
-              dataKey="canal"
-              tick={{
-                fontStyle: 'normal',
-                fontSize: '1rem',
-                fontWeight: '600',
-                letterSpacing: '-0.025em',
-                className: 'font-libre',
-                fill: '#313131',
-              }}
-            />
-            <YAxis
-              tick={{
-                fontStyle: 'normal',
-                fontSize: '1rem',
-                fontWeight: '600',
-                letterSpacing: '-0.025em',
-                className: 'font-libre',
-                fill: '#313131',
-              }}
-            />
+        {data.length === 0 ? (
+          <Card className="mx-6 mb-6">
+            <CardDescription className="p-4 flex flex-col items-center justify-center h-64">
+              <PackageX size={45} className="text-black mb-4" />
+              <h1 className={cn('text-black', fontLibre500.className)}>
+                Nenhum dado encontrado nesse período
+              </h1>
+            </CardDescription>
+          </Card>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data} barCategoryGap="20%" barGap={25}>
+              <XAxis
+                dataKey="canal"
+                tick={{
+                  fontStyle: 'normal',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  letterSpacing: '-0.025em',
+                  className: 'font-libre',
+                  fill: '#313131',
+                }}
+              />
+              <YAxis
+                tick={{
+                  fontStyle: 'normal',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  letterSpacing: '-0.025em',
+                  className: 'font-libre',
+                  fill: '#313131',
+                }}
+              />
 
-            <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} />
 
-            <Legend content={<CustomLegend />} />
-            <Bar dataKey="faturamento" name="Faturamento" fill="#A074F6" />
-            <Bar
-              dataKey="lucroLiquido"
-              name="Lucro Líquido"
-              fill="rgb(52 211 153)"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+              <Legend content={<CustomLegend />} />
+              <Bar dataKey="faturamento" name="Faturamento" fill="#A074F6" />
+              <Bar
+                dataKey="lucroLiquido"
+                name="Lucro Líquido"
+                fill="rgb(52 211 153)"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </Card>
     </div>
   )

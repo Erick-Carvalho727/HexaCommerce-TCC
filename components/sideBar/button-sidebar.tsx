@@ -32,7 +32,7 @@ export default function ButtonSideBar({ icon, title, link }: ButtonProps) {
         <Link href={link} passHref>
           <Button
             size="none"
-            className={`w-60 rounded-3xl bg-black shadow-none hover:bg-roxoBrancoHover hover:shadow-sm justify-start px-7 whitespace-normal ${
+            className={`w-52 notebook:w-60 rounded-3xl bg-black shadow-none hover:bg-roxoBrancoHover hover:shadow-sm justify-start px-7 whitespace-normal ${
               isActive
                 ? 'bg-roxoBranco'
                 : ' focus:bg-roxoBranco active:bg-roxoBranco'
@@ -41,7 +41,7 @@ export default function ButtonSideBar({ icon, title, link }: ButtonProps) {
             <Image src={icon} height={16} width={16} alt="" />
             <h1
               className={cn(
-                'text-[#E0E4EA] text-sm pl-4 py-2 text-left',
+                'text-[#E0E4EA] text-xs notebook:text-sm pl-2 notebook:pl-4 py-2 text-left',
                 fontLibre600.className,
               )}
             >
@@ -52,13 +52,13 @@ export default function ButtonSideBar({ icon, title, link }: ButtonProps) {
       ) : (
         <Button
           size="none"
-          className="w-60 rounded-3xl bg-black shadow-none hover:bg-roxoBrancoHover hover:shadow-sm justify-start px-7 whitespace-normal active:bg-roxoBranco"
+          className="w-52 notebook:w-60 rounded-3xl bg-black shadow-none hover:bg-roxoBrancoHover hover:shadow-sm justify-start px-7 whitespace-normal active:bg-roxoBranco"
           onClick={onOpen}
         >
           <Image src={icon} height={16} width={16} alt="" />
           <h1
             className={cn(
-              'text-[#E0E4EA] text-sm pl-4 py-2 text-left',
+              'text-[#E0E4EA] text-xs notebook:text-sm pl-2 notebook:pl-4 py-2 text-left',
               fontLibre600.className,
             )}
           >

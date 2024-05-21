@@ -84,8 +84,6 @@ export const getDadosGerais = async (
       .filter((sale) => sale.status === 'Concluído')
       .reduce((acc, sale) => acc + sale.valorTotalVenda, 0)
 
-    console.log(dadosPorCanal)
-
     return { vendas, lucroTotal, faturamento, vendasPorCanal, dadosPorCanal }
   } catch (error) {
     console.error('Erro ao buscar os produtos:', error)

@@ -8,20 +8,20 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { useCurrentUser } from '@/hooks/use-current-user'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { Dispatch, SetStateAction, useState } from 'react'
 
 interface FilterByCanaisProps {
   canaisFilter: string[] | null | undefined
   setCanaisFilter: Dispatch<SetStateAction<string[] | null | undefined>>
+  canais: string[]
 }
 
 export default function FilterByCanais({
   canaisFilter,
   setCanaisFilter,
+  canais,
 }: FilterByCanaisProps) {
-  const user = useCurrentUser()
   const [selectedCanais, setSelectedCanais] = useState<
     string[] | null | undefined
   >(canaisFilter || [])
@@ -39,7 +39,7 @@ export default function FilterByCanais({
   }
 
   const handleReset = () => {
-    setSelectedCanais(user?.canais)
+    setSelectedCanais(canais)
   }
 
   const handleApply = () => {
@@ -57,7 +57,13 @@ export default function FilterByCanais({
         <h1 className="pt-3 px-4 text-sm font-semibold">Canais de venda</h1>
         <Separator className="mt-3" />
         <div className="py-5 px-4 w-full flex flex-col gap-y-3">
-          {user?.canais?.map((canal) => (
+          {canais.length === 0 ? (
+            <div>
+              Nenhum canal possui <br /> vendas registradas.
+            </div>
+          ) : null}
+
+          {canais.map((canal) => (
             <div key={canal} className="flex items-center space-x-2">
               <Checkbox
                 id={canal}

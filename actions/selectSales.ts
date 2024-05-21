@@ -28,7 +28,6 @@ export const getSales = async (
         lucroTotalComImposto: true,
         NF: true,
         pis: true,
-        ipi: true,
         totalTriubutos: true,
         valorTotalCusto: true,
         valorTotalLucro: true,
@@ -51,6 +50,22 @@ export const getSales = async (
       },
     })
 
+    const canaisComVendas = await db.sale.findMany({
+      distinct: ['canal'],
+      select: {
+        canal: true,
+      },
+      where: {
+        userId: idUser,
+        quantidade: {
+          gt: 0,
+        },
+      },
+      orderBy: { quantidade: 'asc' },
+    })
+
+    const canais = canaisComVendas.map((canal) => canal.canal)
+
     const salesWithCodigoAsString = sales.map((sale) => ({
       ...sale,
       numeroDoPedido: sale.id.toString(),
@@ -59,6 +74,7 @@ export const getSales = async (
 
     return {
       sales: salesWithCodigoAsString,
+      canais,
     }
   } catch (error) {
     return { error: 'Não foi possível carregar as vendas!' }

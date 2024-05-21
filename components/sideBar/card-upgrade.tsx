@@ -23,14 +23,25 @@ const fontMulish = Mulish({
 
 export default function CardUpgrade() {
   return (
-    <div className="flex flex-col justify-start items-center w-[252px] h-[213px] bg-white/15 rounded-2xl relative mt-7">
+    <div className="flex flex-col justify-start items-center notebook:w-[252px] w-[200px] h-[213px] bg-white/15 rounded-2xl relative mt-7">
       <Image
         src={blueFolder}
         height={73}
         alt=""
-        className="absolute top-[-28px]"
+        className="absolute top-[-28px] hidden notebook:block"
       />
-      <h1 className={cn('text-white text-base mt-16', fontLibre600.className)}>
+      <Image
+        src={blueFolder}
+        height={65}
+        alt=""
+        className="absolute top-[-22px] block notebook:hidden"
+      />
+      <h1
+        className={cn(
+          'text-white notebook:text-base text-sm mt-16',
+          fontLibre600.className,
+        )}
+      >
         Upgrade Premium
       </h1>
       <p
@@ -41,8 +52,13 @@ export default function CardUpgrade() {
       >
         Elevate your reach to our extensive resume database
       </p>
-      <Button className="w-[135px] h-10 rounded-3xl mt-4 bg-roxoBranco hover:bg-roxoBrancoHover">
-        <h1 className={cn('text-white text-sm', fontLibre500.className)}>
+      <Button className="notebook:w-[135px] w-[120px] h-8 notebook:h-10 rounded-3xl mt-4 bg-roxoBranco hover:bg-roxoBrancoHover">
+        <h1
+          className={cn(
+            'text-white notebook:text-sm text-xs',
+            fontLibre500.className,
+          )}
+        >
           Upgrade Now
         </h1>
       </Button>

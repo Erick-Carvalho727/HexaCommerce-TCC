@@ -24,6 +24,7 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
   const findIdProduct = await db.product.findFirst({
     where: {
       nomeProduto,
+      userId: idUser!,
     },
     select: {
       id: true,
@@ -47,13 +48,10 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
   const precoVendaTotal = quantidade * findIdProduct!.precoVenda
   const lucro = precoVendaTotal - custoTotal
   const icms = precoVendaTotal * 0.18
-  const ipi = precoVendaTotal * 0.04
   const pis = precoVendaTotal * 0.0186
   const cofins = precoVendaTotal * 0.0854
-  const totalTributos = icms + ipi + pis + cofins
+  const totalTributos = icms + pis + cofins
   const lucroTotalComImposto = lucro - totalTributos
-
-  console.log(quantidade, canal, idUser, findIdProduct!.id)
 
   try {
     const sale = await db.sale.create({
@@ -65,7 +63,6 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
         valorTotalLucro: lucro,
         NF,
         icms,
-        ipi,
         pis,
         cofins,
         totalTriubutos: totalTributos,
@@ -80,7 +77,7 @@ export const createSale = async (values: z.infer<typeof SaleSchema>) => {
       return { sale, success: 'Venda cadastrada com sucesso!' }
 
     await db.product.update({
-      where: { id: findIdProduct!.id },
+      where: { id: findIdProduct!.id, userId: idUser! },
       data: {
         estoque: novoEstoque,
       },

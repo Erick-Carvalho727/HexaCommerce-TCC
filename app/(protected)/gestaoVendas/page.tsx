@@ -17,6 +17,7 @@ interface SaleResponse {
   sales?: z.infer<typeof SaleSchemaSelector>[]
   error?: string | undefined
   success?: string | undefined
+  canais?: string[]
 }
 
 export default function GestaoVendasPage() {
@@ -25,6 +26,7 @@ export default function GestaoVendasPage() {
   const [, setError] = useState<string | undefined>('')
   const [isPending, startTransition] = useTransition()
   const [sales, setSales] = useState<z.infer<typeof SaleSchemaSelector>[]>([])
+  const [canais, setCanais] = useState<string[]>([])
   const [date, setDate] = useState<DateRange | undefined>(() => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -48,6 +50,7 @@ export default function GestaoVendasPage() {
       getSales(date, statusFilter, canaisFilter)
         .then((data: SaleResponse) => {
           if (data.sales) setSales(data.sales)
+          if (data.canais) setCanais(data.canais)
         })
         .catch((e) => setError(e))
     })
@@ -86,6 +89,7 @@ export default function GestaoVendasPage() {
         data={sales}
         setDate={setDate}
         date={date}
+        canais={canais}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         canaisFilter={canaisFilter}
