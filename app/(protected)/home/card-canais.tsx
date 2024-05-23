@@ -49,9 +49,9 @@ export default function CardCanais({ vendasPorCanal, date }: CardCanaisProps) {
           <Card className="w-full">
             <CardDescription className="p-4 flex flex-col items-center justify-center h-48">
               <PackageX size={45} className="text-black mb-4" />
-              <h1 className={cn('text-black', fontLibre600.className)}>
+              <span className={cn('text-black', fontLibre600.className)}>
                 Nenhum dado encontrado nesse período
-              </h1>
+              </span>
             </CardDescription>
           </Card>
         ) : null}
