@@ -45,12 +45,14 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
+    console.log('@@@ listDadosGerais')
     listDadosGerais()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
   const listDadosGerais = () => {
     startTransition(() => {
+      console.log('@@@ transition')
       getDadosGerais(date).then(setDadosGerais)
     })
   }

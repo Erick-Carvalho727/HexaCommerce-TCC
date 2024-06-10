@@ -122,9 +122,9 @@ export default function CardGrafico({ dadosPorCanal, date }: CardGraficoProps) {
           <Card className="mx-6 mb-6">
             <CardDescription className="p-4 flex flex-col items-center justify-center h-64">
               <PackageX size={45} className="text-black mb-4" />
-              <h1 className={cn('text-black', fontLibre500.className)}>
+              <span className={cn('text-black', fontLibre500.className)}>
                 Nenhum dado encontrado nesse período
-              </h1>
+              </span>
             </CardDescription>
           </Card>
         ) : (
