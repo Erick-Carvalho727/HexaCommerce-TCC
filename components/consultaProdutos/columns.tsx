@@ -99,7 +99,7 @@ export function createColumns(
         </DropdownMenu>
 
         <AlertDialog open={open} onOpenChange={setOpen}>
-          <AlertDialogContent>
+          <AlertDialogContent className="rounded-lg">
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {selectedProductIds.length === 1
@@ -113,12 +113,12 @@ export function createColumns(
                 selecionados do nosso sistema.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="bg-default">
+            <AlertDialogFooter className="flex flex-row items-center space-x-4">
+              <AlertDialogCancel className="bg-default m-0 w-full">
                 Cancelar
               </AlertDialogCancel>
               <AlertDialogAction
-                className="bg-destructive"
+                className="bg-destructive w-full"
                 onClick={() => {
                   handleDeleteProduct(selectedProductIds, product.id)
                   table.resetRowSelection()

@@ -42,7 +42,7 @@ export default function CardUpgrade() {
           fontLibre600.className,
         )}
       >
-        Upgrade Premium
+        Exclusive Upgrade
       </h1>
       <p
         className={cn(
@@ -50,7 +50,7 @@ export default function CardUpgrade() {
           fontMulish.className,
         )}
       >
-        Elevate your reach to our extensive resume database
+        Melhore a sua experiência adicionando mais canais de vendas!
       </p>
       <Button className="notebook:w-[135px] w-[120px] h-8 notebook:h-10 rounded-3xl mt-4 bg-roxoBranco hover:bg-roxoBrancoHover">
         <h1
@@ -59,7 +59,7 @@ export default function CardUpgrade() {
             fontLibre500.className,
           )}
         >
-          Upgrade Now
+          Realizar Upgrade
         </h1>
       </Button>
     </div>

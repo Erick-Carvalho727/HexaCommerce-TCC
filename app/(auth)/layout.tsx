@@ -13,8 +13,8 @@ export default function LayoutAuthPage({
           <Image src={logoHexa} alt="" height={60} />
           <div>
             <h1 className="text-white font-semibold text-xl mb-3">
-              “This library has saved me countless hours of work and helped me
-              deliver stunning designs to my clients faster than ever before.”
+              “Automatize com eficiência e transforme seu negócio em tempo
+              recorde”
             </h1>
             <p className="text-white">HexaCommerce</p>
           </div>

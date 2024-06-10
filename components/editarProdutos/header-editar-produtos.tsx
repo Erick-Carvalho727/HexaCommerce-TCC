@@ -3,7 +3,7 @@ import { Button } from '../ui/button'
 import { Libre_Franklin } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { FaSave } from 'react-icons/fa'
-import { Cross1Icon, ReaderIcon, ReloadIcon } from '@radix-ui/react-icons'
+import { Cross1Icon, ReloadIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 
 const fontLibre600 = Libre_Franklin({
@@ -37,17 +37,6 @@ export default function HeaderEditarProdutos({
           disabled={isPending}
           type="button"
           onClick={onClickConsultarProdutos}
-          className=" text-white hover:text-white hover:bg-[#494c50]"
-        >
-          <ReaderIcon height={12} width={12} />
-          <p className={cn('pl-1', fontLibre500.className)}>
-            Consultar Produtos
-          </p>
-        </Button>
-
-        <Button
-          disabled={isPending}
-          type="button"
           className="bg-roxoClaro text-roxoBranco hover:text-white hover:bg-destructive"
         >
           <Cross1Icon height={12} width={12} />

@@ -29,6 +29,10 @@ export default function HeaderCadastroProdutos({
     router.push('/consultaProdutos')
   }
 
+  const onClickCancelar = () => {
+    router.push('/home')
+  }
+
   return (
     <div className="flex justify-between items-center pb-4">
       <h1 className={cn('text-3xl', fontLibre600.className)}>
@@ -50,6 +54,7 @@ export default function HeaderCadastroProdutos({
         <Button
           disabled={isPending}
           type="button"
+          onClick={onClickCancelar}
           className="bg-roxoClaro text-roxoBranco hover:text-white hover:bg-destructive"
         >
           <Cross1Icon height={12} width={12} />
